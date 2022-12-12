@@ -225,10 +225,6 @@
     <Content Include="Views\Goods\Details.cshtml" />
     <Content Include="Views\Goods\Index.cshtml" />
     <Content Include="Views\GoodOrders\Create.cshtml" />
-    <Content Include="Views\GoodOrders\Delete.cshtml" />
-    <Content Include="Views\GoodOrders\Details.cshtml" />
-    <Content Include="Views\GoodOrders\Edit.cshtml" />
-    <Content Include="Views\GoodOrders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -7,22 +7,17 @@
 @functions{
     public static string generateOID()
     {
-        return "G" + DateTime.Now.ToString("mmss");
+        //generate random letter
+
+        Random random = new Random();
+        char letter = (char)('A' + random.Next(0, 26));
+        return "G" +letter+DateTime.Now.ToString("mmss");
     }
 }
-
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
-    <script type="text/javascript">
-    $(document).ready(function () {
-        $('#goodQuantity').on('change keyup', function () {
-            console.log('Hi')
-        })
-    })
-    </script>
 
     <div class="form-horizontal">
         <h4>Purchase</h4>
@@ -46,7 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.GID, "GID", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("GID", null, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                @Html.DropDownList("GID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.GID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -70,7 +65,7 @@
             @Html.LabelFor(model => model.TotalPrice, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <input type="hidden" id="goodPrice" value="@ViewBag.Price" />
-                <input type="text" name="TotalPrice" id="totalPrice" value="@ViewBag.Price" />
+                <input type="text" name="TotalPrice" id="totalPrice" value="@ViewBag.Price" readonly/>
             </div>
         </div>
 
@@ -96,4 +91,14 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#goodQuantity").change(function () {
+                var quantity = $("#goodQuantity").val();
+                var price = $("#goodPrice").val();
+                var totalPrice = quantity * price;
+                $("#totalPrice").val(totalPrice);
+            });
+        });
+    </script>
 }

@@ -14,29 +14,6 @@ namespace WebApplicationFinal.Controllers
     {
         private FinalSE db = new FinalSE();
 
-        // GET: GoodOrders
-        public ActionResult Index()
-        {
-            var goodOrders = db.GoodOrders.Include(g => g.Agent).Include(g => g.Good);
-            return View(goodOrders.ToList());
-        }
-
-        // GET: GoodOrders/Details/5
-        public ActionResult Details(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GoodOrder goodOrder = db.GoodOrders.Find(id);
-            if (goodOrder == null)
-            {
-                return HttpNotFound();
-            }
-            return View(goodOrder);
-        }
-
-        // GET: GoodOrders/Create
         public ActionResult Create(string id)
         {
             Good good = db.Goods.Find(id);
@@ -44,13 +21,10 @@ namespace WebApplicationFinal.Controllers
             ViewBag.Quantity = good.Quantity;
             ViewBag.GName = good.GName;
             ViewBag.AID = new SelectList(db.Agents, "AID", "AName");
-            ViewBag.GID = new SelectList(db.Goods, "GID", "GName", id);
+            ViewBag.GID = new SelectList(db.Goods, "GID", "GName", good.GID);
             return View();
         }
 
-        // POST: GoodOrders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "OID,AID,GID,Quantity,OrderDate,TotalPrice,PaymentMethod")] GoodOrder goodOrder)
@@ -59,75 +33,32 @@ namespace WebApplicationFinal.Controllers
             {
                 db.GoodOrders.Add(goodOrder);
                 db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
-            ViewBag.AID = new SelectList(db.Agents, "AID", "AName", goodOrder.AID);
-            ViewBag.GID = new SelectList(db.Goods, "GID", "GName", goodOrder.GID);
-            return View(goodOrder);
-        }
-
-        // GET: GoodOrders/Edit/5
-        public ActionResult Edit(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GoodOrder goodOrder = db.GoodOrders.Find(id);
-            if (goodOrder == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.AID = new SelectList(db.Agents, "AID", "AName", goodOrder.AID);
-            ViewBag.GID = new SelectList(db.Goods, "GID", "GName", goodOrder.GID);
-            return View(goodOrder);
-        }
-
-        // POST: GoodOrders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "OID,AID,GID,Quantity,OrderDate,TotalPrice,PaymentMethod")] GoodOrder goodOrder)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(goodOrder).State = EntityState.Modified;
+                Good good = db.Goods.Find(goodOrder.GID);
+                good.Quantity = good.Quantity - goodOrder.Quantity;
+                db.Entry(good).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+
+                Random random = new Random();
+                char letter = (char)('A' + random.Next(0, 26));
+                string deliveryID = "D" + letter + DateTime.Now.ToString("mmss");
+                Delivery delivery = new Delivery();
+                delivery.DeliveryID = deliveryID;
+                delivery.OID = goodOrder.OID;
+                delivery.AID = goodOrder.AID;
+                delivery.PaymentStatus = "Paid";
+                delivery.GoodsStatus = "Pending";
+
+                db.Deliveries.Add(delivery);
+                db.SaveChanges();
+
+                return RedirectToAction("Index", "Home");
             }
+
             ViewBag.AID = new SelectList(db.Agents, "AID", "AName", goodOrder.AID);
             ViewBag.GID = new SelectList(db.Goods, "GID", "GName", goodOrder.GID);
             return View(goodOrder);
         }
-
-        // GET: GoodOrders/Delete/5
-        public ActionResult Delete(string id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            GoodOrder goodOrder = db.GoodOrders.Find(id);
-            if (goodOrder == null)
-            {
-                return HttpNotFound();
-            }
-            return View(goodOrder);
-        }
-
-        // POST: GoodOrders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(string id)
-        {
-            GoodOrder goodOrder = db.GoodOrders.Find(id);
-            db.GoodOrders.Remove(goodOrder);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
