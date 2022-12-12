@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WebApplicationFinal.Models.Good>
+@{
+    ViewData["Title"] = "Index";
+}
+@functions{
+    public static string GetImageBase64String(byte[] image)
+    {
+        string imageBase64Data = Convert.ToBase64String(image);
+        string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
+        return imageDataURL;
+    }
+}
+<h2 class="text-center">Goods List</h2>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3" style="border: 2px solid black">
+                <div style="text-align: center;">
+                    <h3>@item.GName</h3>
+                </div>
+
+                <div class="row" style="border-top:2px solid maroon">
+                    <a asp-action="Details" asp-route-id="@item.GID">
+                        <div class="col-md-12 text-center">
+                            <img src="@GetImageBase64String(item.GPhoto)" width="150px" height="150px" />
+                        </div>
+                    </a>
+                </div>
+
+                <div class="row" style="border-top:2px solid maroon">
+                    <div class="col-md-8" style="font-size:18px;">
+                        <b>@(item.SellingPrice.Value.ToString("n0")) VND</b>
+                    </div>
+                    <div class="col-md-4" style="font-size:18px;">
+                        @Html.ActionLink("Details", "Details", new { id = item.GID }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Purchase", "Create", "GoodOrders", new { id = item.GID }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
