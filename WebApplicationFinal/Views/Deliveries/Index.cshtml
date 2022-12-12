@@ -1,0 +1,42 @@
+﻿@model IEnumerable<WebApplicationFinal.Models.Delivery>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Delivery status</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Agent ID
+        </th>
+        <th>
+            Agent Name
+        </th>
+        <th>
+            Goods Status
+        </th>
+        <th>
+            Payment Status
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.GoodOrder.AID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Agent.AName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GoodsStatus)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentStatus)
+        </td>
+    </tr>
+}
+
+</table>

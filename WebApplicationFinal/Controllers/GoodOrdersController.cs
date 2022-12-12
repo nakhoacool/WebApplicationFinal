@@ -52,7 +52,7 @@ namespace WebApplicationFinal.Controllers
                 db.Deliveries.Add(delivery);
                 db.SaveChanges();
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Deliveries");
             }
 
             ViewBag.AID = new SelectList(db.Agents, "AID", "AName", goodOrder.AID);
