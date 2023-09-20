@@ -1,7 +1,5 @@
 # Supplement Facts Ordering System
 
-A C# MVC WebForms application for viewing supplement facts, placing orders, and choosing payment methods.
-
 ## Table of Contents
 
 - [Introduction](#introduction)
