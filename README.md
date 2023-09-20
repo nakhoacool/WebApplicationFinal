@@ -53,8 +53,6 @@ To get started with this project, follow these steps:
 
 ## Dependencies
 
-List the key dependencies your project relies on. For example:
-
 - ASP.NET MVC Framework
 - Entity Framework (for database interaction)
 - Bootstrap (for styling)
