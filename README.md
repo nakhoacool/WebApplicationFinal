@@ -6,7 +6,6 @@ A C# MVC WebForms application for viewing supplement facts, placing orders, and 
 
 - [Introduction](#introduction)
 - [Features](#features)
-- [Screenshots](#screenshots)
 - [Getting Started](#getting-started)
 - [Dependencies](#dependencies)
 - [Contributing](#contributing)
